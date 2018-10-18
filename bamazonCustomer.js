@@ -85,7 +85,8 @@ function numProducts() {
                     'UPDATE products SET ? WHERE ?',
                     [
                         {
-                            stock_quantity: (stock - uniqueQuantity)
+                            stock_quantity: (stock - uniqueQuantity),
+                            product_sales: (uniqueQuantity * price)
                         },
                         {
                             item_id: uniqueId
