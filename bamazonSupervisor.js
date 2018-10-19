@@ -19,7 +19,6 @@ connection.connect(function(err) {
   if (err) throw err;
   console.log("connected as id " + connection.threadId);
   promptUser();
-  connection.end();
 });
 
 function promptUser() {
@@ -33,10 +32,47 @@ function promptUser() {
         }
     ]).then(function(answer) {
         if (answer.choose === 'View Product Sales by Department') {
-            console.log(true);
+            productSales();
         }
-        else if (answer.choice === 'Create New Department') {
-            console.log(true);
+        else if (answer.choose === 'Create New Department') {
+            createDept();
         }
+    })
+}
+
+function productSales() {
+    var query = 'SELECT departments.department_id, departments.department_name, departments.over_head_costs, products.product_sales FROM departments INNER JOIN products ON departments.department_name = products.department_name;';
+    connection.query(query, function(err, res) {
+        if (err) throw err;
+        // console.log(res);
+        for (var i = 0; i < res.length; i++) {
+            console.log(res[i].department_id + ' | ' + res[i].department_name + ' | ' + res[i].over_head_costs + ' | ' + res[i].product_sales + ' | ' + (res[i].product_sales - res[i].over_head_costs));
+        }
+    })
+}
+
+function createDept() {
+    inquirer.prompt([
+        {
+            name: 'name',
+            message: 'What department would you like to create?',
+            type: 'input'
+        },
+        {
+            name: 'cost',
+            message: 'What is the overhead cost for this department?',
+            type: 'input'
+        }
+    ]).then(function(answer) {
+        var query = 'INSERT INTO departments SET ?';
+        connection.query(query, [
+            {
+                department_name: answer.name,
+                over_head_costs: answer.cost
+            }
+        ], function(err, res) {
+            if (err) throw err;
+            console.log('You created a new ' + answer.name + ' department with $' + answer.cost + ' overhead!')
+        })
     })
 }
