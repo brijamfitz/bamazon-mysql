@@ -37,9 +37,18 @@ VALUES ('Playstation 4', 'electronics', 400, 20);
 CREATE TABLE departments(
     department_id INT(11) AUTO_INCREMENT NOT NULL,
     department_name VARCHAR(50),
-    over_head_costs INT(11),
+    over_head_costs DECIMAL(11,2),
     PRIMARY KEY (department_id)
 );
+
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ('electronics', 69000);
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ('firearms', 33000);
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ('food', 25000);
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ('sporting goods', 50000);
 
 ALTER TABLE products
 ADD product_sales DECIMAL(11,2);
@@ -47,3 +56,7 @@ ADD product_sales DECIMAL(11,2);
 SELECT * FROM products;
 
 SELECT * FROM departments;
+
+SELECT departments.department_id, departments.department_name, departments.over_head_costs, products.product_sales
+FROM departments
+INNER JOIN products ON departments.department_name = products.department_name;

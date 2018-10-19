@@ -27,18 +27,18 @@ var uniqueId = 0;
 var uniqueQuantity = 0;
 
 function displayProducts() {
-  console.log("Welcome to Bamazon!");
-  console.log("Below is a list of all the items for sale.");
-  var query = "SELECT * FROM products";
-  connection.query(query, function(err, res) {
-    if (err) throw err;
-    for (var i = 0; i < res.length; i++) {
-        console.log(res[i].item_id + ' | ' + res[i].product_name + ' | ' + res[i].department_name + ' | ' + '$' + res[i].price + ' | ' + res[i].stock_quantity);
-        itemIds.push(res[i].item_id);
-        itemQuantity.push(res[i].stock_quantity);
-    }
-    selectProduct();
-  });
+    console.log("Welcome to Bamazon!");
+    console.log("Below is a list of all the items for sale.");
+    var query = "SELECT * FROM products";
+    connection.query(query, function(err, res) {
+        if (err) throw err;
+        for (var i = 0; i < res.length; i++) {
+            console.log(res[i].item_id + ' | ' + res[i].product_name + ' | ' + res[i].department_name + ' | ' + '$' + res[i].price + ' | ' + res[i].stock_quantity);
+            itemIds.push(res[i].item_id);
+            itemQuantity.push(res[i].stock_quantity);
+        }
+        selectProduct();
+    });
 }
 
 function selectProduct() {
@@ -102,6 +102,20 @@ function numProducts() {
     })
 }
 
-function completePurchase() {
-    
+function endConnection() {
+    inquirer.prompt([
+        {
+            name: 'confirm',
+            type: 'confirm',
+            message: 'Would you like to purchase another product?'
+        }
+    ]).then(function(answer) {
+        // console.log(answer.confirm);
+        if (answer.confirm) {
+            displayProducts();
+        }
+        else {
+            connection.end();
+        }
+    })
 }
