@@ -77,6 +77,7 @@ SELECT department_name, SUM(product_sales)
 FROM products
 WHERE department_name = 'electronics';
 
+-- Rolling up each department's total sales
 SELECT departments.department_id, departments.department_name, departments.over_head_costs,
 SUM(product_sales) AS product_sales
 FROM departments, products
