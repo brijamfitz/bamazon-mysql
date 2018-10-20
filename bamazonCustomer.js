@@ -32,6 +32,7 @@ function displayProducts() {
     var query = "SELECT * FROM products";
     connection.query(query, function(err, res) {
         if (err) throw err;
+        itemIds = [];
         for (var i = 0; i < res.length; i++) {
             console.log(res[i].item_id + ' | ' + res[i].product_name + ' | ' + res[i].department_name + ' | ' + '$' + res[i].price + ' | ' + res[i].stock_quantity); 
             itemIds.push(res[i].item_id);
@@ -94,10 +95,11 @@ function numProducts() {
                     ],
                     function(err, res) {
                         if (err) throw err;
+                        endConnection();
                     }
                 )
             }
-            connection.end();
+            
         })   
     })
 }
