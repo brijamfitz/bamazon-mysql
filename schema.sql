@@ -57,6 +57,31 @@ SELECT * FROM products;
 
 SELECT * FROM departments;
 
+-- Group duplicate departments
+SELECT department_id, department_name, over_head_costs, COUNT(*)
+FROM departments
+GROUP BY department_id, department_name, over_head_costs;
+
+-- Join products and departments tables
 SELECT departments.department_id, departments.department_name, departments.over_head_costs, products.product_sales
 FROM departments
 INNER JOIN products ON departments.department_name = products.department_name;
+
+-- Shows number of items in each department
+SELECT department_name, COUNT(*)
+FROM products
+GROUP BY department_name;
+
+-- Find the total sum of product sales for a particular department
+SELECT department_name, SUM(product_sales)
+FROM products
+WHERE department_name = 'electronics';
+
+SELECT departments.department_id, departments.department_name, departments.over_head_costs,
+SUM(product_sales) AS product_sales
+FROM departments, products
+WHERE departments.department_name = products.department_name
+GROUP BY departments.department_id, departments.department_name, departments.over_head_costs
+ORDER BY departments.department_id;
+
+SELECT * FROM products;
