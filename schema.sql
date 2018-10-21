@@ -14,25 +14,25 @@ CREATE TABLE products(
 );
 
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ('Playstation 4', 'electronics', 400, 20);
+VALUES ('Playstation 4', 'Electronics', 400, 390);
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ('Playstation 4', 'electronics', 400, 20);
+VALUES ('Raincoat', 'Clothing', 125, 250);
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ('Playstation 4', 'electronics', 400, 20);
+VALUES ('Golf Clubs', 'Sporting Goods', 899, 500);
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ('Playstation 4', 'electronics', 400, 20);
+VALUES ('Hot Dogs', 'Food', 4.99, 300);
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ('Playstation 4', 'electronics', 400, 20);
+VALUES ('Corvette', 'Auto', 69000, 420);
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ('Playstation 4', 'electronics', 400, 20);
+VALUES ('Down Parka', 'Clothing', 575, 175);
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ('Playstation 4', 'electronics', 400, 20);
+VALUES ('iPhone X', 'Electronics', 1000, 350);
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ('Playstation 4', 'electronics', 400, 20);
+VALUES ('Sniper Rifle', 'Firearms', 600, 225);
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ('Playstation 4', 'electronics', 400, 20);
+VALUES ('Bowling Ball', 'Sporting Goods', 125, 800);
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ('Playstation 4', 'electronics', 400, 20);
+VALUES ('Snickers', 'Food', 1.50, 730);
 
 CREATE TABLE departments(
     department_id INT(11) AUTO_INCREMENT NOT NULL,
@@ -41,21 +41,8 @@ CREATE TABLE departments(
     PRIMARY KEY (department_id)
 );
 
-INSERT INTO departments (department_name, over_head_costs)
-VALUES ('electronics', 69000);
-INSERT INTO departments (department_name, over_head_costs)
-VALUES ('firearms', 33000);
-INSERT INTO departments (department_name, over_head_costs)
-VALUES ('food', 25000);
-INSERT INTO departments (department_name, over_head_costs)
-VALUES ('sporting goods', 50000);
-
 ALTER TABLE products
 ADD product_sales DECIMAL(11,2);
-
-SELECT * FROM products;
-
-SELECT * FROM departments;
 
 -- Group duplicate departments
 SELECT department_id, department_name, over_head_costs, COUNT(*)
@@ -75,7 +62,7 @@ GROUP BY department_name;
 -- Find the total sum of product sales for a particular department
 SELECT department_name, SUM(product_sales)
 FROM products
-WHERE department_name = 'electronics';
+WHERE department_name = 'Electronics';
 
 -- Rolling up each department's total sales
 SELECT departments.department_id, departments.department_name, departments.over_head_costs,
@@ -86,3 +73,5 @@ GROUP BY departments.department_id, departments.department_name, departments.ove
 ORDER BY departments.department_id;
 
 SELECT * FROM products;
+
+SELECT * FROM departments;
