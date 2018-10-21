@@ -28,7 +28,7 @@ function promptUser() {
             type: 'rawlist',
             name: 'choose',
             message: 'What would you like to do?',
-            choices: ['View Products for Sale', 'View Low Inventory', 'Add to Inventory', 'Add New Product']
+            choices: ['View Products for Sale', 'View Low Inventory', 'Add to Inventory', 'Add New Product', 'Exit']
         }
     ]).then(function(userChoice) {
         if (userChoice.choose === 'View Products for Sale') {
@@ -43,6 +43,9 @@ function promptUser() {
         else if (userChoice.choose === 'Add New Product') {
             addProduct();
         }
+        else if (userChoice.choose === 'Exit') {
+            connection.end();
+        }
     })
 }
 
@@ -51,25 +54,39 @@ function viewProducts() {
     connection.query(query, function(err, res) {
         if (err) throw err;
         // console.log(res);
+        console.log(' ID | Product Name | Dept Name | Price | Quantity ');
         for (var i = 0; i < res.length; i++) {
             console.log(res[i].item_id + ' | ' + res[i].product_name + ' | ' + res[i].department_name + ' | ' + '$' + res[i].price + ' | ' + res[i].stock_quantity);
         }
-    })
+        endConnection();
+    })  
 }
 
 function lowInventory() {
     var query = 'SELECT * FROM products';
+    console.log('Below are the products that have an inventory of 50 or less.')
     connection.query(query, function(err, res) {
         if (err) throw err;
+        console.log(' ID | Product Name | Dept Name | Price | Quantity ');
         for (var j = 0; j < res.length; j++) {
-            if (res[j].stock_quantity <= 5) {
+            if (res[j].stock_quantity <= 50) {
                 console.log(res[j].item_id + ' | ' + res[j].product_name + ' | ' + res[j].department_name + ' | ' + '$' + res[j].price + ' | ' + res[j].stock_quantity);
             }
         }
+        endConnection();
     })
 }
 
 function addInventory() {
+    var query = 'SELECT * FROM products';
+    connection.query(query, function(err, res) {
+        if (err) throw err;
+        // console.log(res);
+        console.log(' ID | Product Name | Dept Name | Price | Quantity ');
+        for (var i = 0; i < res.length; i++) {
+            console.log(res[i].item_id + ' | ' + res[i].product_name + ' | ' + res[i].department_name + ' | ' + '$' + res[i].price + ' | ' + res[i].stock_quantity);
+        }
+    })  
     inquirer.prompt([
         {
             name: 'id',
@@ -100,10 +117,10 @@ function addInventory() {
                 if (error) throw error;
                 console.log('You added ' + uniqueQuantity + ' units to the inventory!');
                 console.log('The new inventory is now: ' + (uniqueQuantity + res[0].stock_quantity + '.'));
+                endConnection();
             });
         })
     })
-    viewProducts();
 }
 
 function addProduct() {
@@ -141,6 +158,25 @@ function addProduct() {
         function(err, res) {
             if (err) throw err;
             console.log('Thank you! You have added ' + answer.name + ' to the inventory!');
+            endConnection();
         })
+    })
+}
+
+function endConnection() {
+    inquirer.prompt([
+        {
+            name: 'confirm',
+            type: 'confirm',
+            message: 'Would you like to return to the main menu?'
+        }
+    ]).then(function(answer) {
+        // console.log(answer.confirm);
+        if (answer.confirm) {
+            promptUser();
+        }
+        else {
+            connection.end();
+        }
     })
 }
