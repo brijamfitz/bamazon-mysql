@@ -28,7 +28,7 @@ function promptUser() {
             type: 'rawlist',
             name: 'choose',
             message: 'Please select an option below:',
-            choices: ['View Product Sales by Department', 'Create New Department']
+            choices: ['View Product Sales by Department', 'Create New Department', 'Exit']
         }
     ]).then(function(answer) {
         if (answer.choose === 'View Product Sales by Department') {
@@ -36,6 +36,9 @@ function promptUser() {
         }
         else if (answer.choose === 'Create New Department') {
             createDept();
+        }
+        else if (answer.choose === 'Exit') {
+            connection.end();
         }
     })
 }
@@ -46,10 +49,12 @@ function productSales() {
     connection.query(query, function(err, res) {
         if (err) throw err;
         // console.log(res);
+        console.log(' ID | Dept Name | Overhead Costs | Product Sales | Total Profit ');
         for (var i = 0; i < res.length; i++) {
-            console.log(res[i].department_id + ' | ' + res[i].department_name + ' | ' + res[i].over_head_costs + ' | ' + res[i].product_sales + ' | ' + (res[i].product_sales - res[i].over_head_costs));
+            console.log(res[i].department_id + ' | ' + res[i].department_name + ' | ' + res[i].over_head_costs + ' | ' + '$' + res[i].product_sales + ' | ' + (res[i].product_sales - res[i].over_head_costs));
         }
     })
+    endConnection();
 }
 
 function createDept() {
@@ -74,6 +79,25 @@ function createDept() {
         ], function(err, res) {
             if (err) throw err;
             console.log('You created a new ' + answer.name + ' department with $' + answer.cost + ' overhead!')
+            endConnection();
         })
+    })
+}
+
+function endConnection() {
+    inquirer.prompt([
+        {
+            name: 'confirm',
+            type: 'confirm',
+            message: 'Would you like to return to the main menu?'
+        }
+    ]).then(function(answer) {
+        // console.log(answer.confirm);
+        if (answer.confirm) {
+            promptUser();
+        }
+        else {
+            connection.end();
+        }
     })
 }
