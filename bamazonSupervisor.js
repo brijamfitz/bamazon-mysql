@@ -17,7 +17,7 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
   if (err) throw err;
-  console.log("connected as id " + connection.threadId);
+//   console.log("connected as id " + connection.threadId);
   promptUser();
 });
 
@@ -49,12 +49,12 @@ function productSales() {
     connection.query(query, function(err, res) {
         if (err) throw err;
         // console.log(res);
-        console.log(' ID | Dept Name | Overhead Costs | Product Sales | Total Profit ');
+        console.log('ID | Dept Name | Overhead Costs | Product Sales | Total Profit');
         for (var i = 0; i < res.length; i++) {
             console.log(res[i].department_id + ' | ' + res[i].department_name + ' | ' + res[i].over_head_costs + ' | ' + '$' + res[i].product_sales + ' | ' + (res[i].product_sales - res[i].over_head_costs));
         }
-    })
-    endConnection();
+        endConnection();
+    })  
 }
 
 function createDept() {
