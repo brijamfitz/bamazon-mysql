@@ -17,7 +17,7 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
   if (err) throw err;
-  console.log("connected as id " + connection.threadId);
+//   console.log("connected as id " + connection.threadId);
   promptUser();
 });
 
@@ -54,7 +54,7 @@ function viewProducts() {
     connection.query(query, function(err, res) {
         if (err) throw err;
         // console.log(res);
-        console.log(' ID | Product Name | Dept Name | Price | Quantity ');
+        console.log('ID | Product Name | Dept Name | Price | Quantity');
         for (var i = 0; i < res.length; i++) {
             console.log(res[i].item_id + ' | ' + res[i].product_name + ' | ' + res[i].department_name + ' | ' + '$' + res[i].price + ' | ' + res[i].stock_quantity);
         }
@@ -67,7 +67,7 @@ function lowInventory() {
     console.log('Below are the products that have an inventory of 50 or less.')
     connection.query(query, function(err, res) {
         if (err) throw err;
-        console.log(' ID | Product Name | Dept Name | Price | Quantity ');
+        console.log('ID | Product Name | Dept Name | Price | Quantity');
         for (var j = 0; j < res.length; j++) {
             if (res[j].stock_quantity <= 50) {
                 console.log(res[j].item_id + ' | ' + res[j].product_name + ' | ' + res[j].department_name + ' | ' + '$' + res[j].price + ' | ' + res[j].stock_quantity);
@@ -82,7 +82,7 @@ function addInventory() {
     connection.query(query, function(err, res) {
         if (err) throw err;
         // console.log(res);
-        console.log(' ID | Product Name | Dept Name | Price | Quantity ');
+        console.log('ID | Product Name | Dept Name | Price | Quantity');
         for (var i = 0; i < res.length; i++) {
             console.log(res[i].item_id + ' | ' + res[i].product_name + ' | ' + res[i].department_name + ' | ' + '$' + res[i].price + ' | ' + res[i].stock_quantity);
         }

@@ -17,7 +17,7 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
   if (err) throw err;
-  console.log("connected as id " + connection.threadId);
+//   console.log("connected as id " + connection.threadId);
   displayProducts();
 });
 
@@ -33,7 +33,7 @@ function displayProducts() {
     connection.query(query, function(err, res) {
         if (err) throw err;
         itemIds = [];
-        console.log(' ID | Product Name | Dept Name | Price | Quantity ');
+        console.log('ID | Product Name | Dept Name | Price | Quantity');
         for (var i = 0; i < res.length; i++) {
             console.log(res[i].item_id + ' | ' + res[i].product_name + ' | ' + res[i].department_name + ' | ' + '$' + res[i].price + ' | ' + res[i].stock_quantity); 
             itemIds.push(res[i].item_id);
