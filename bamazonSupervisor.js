@@ -1,33 +1,29 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var Table = require("cli-table");
 
 var connection = mysql.createConnection({
   host: "localhost",
-
-  // Your port; if not 3306
   port: 3306,
-
-  // Your username
   user: "root",
-
-  // Your password
   password: "",
   database: "bamazon"
 });
 
 connection.connect(function(err) {
   if (err) throw err;
-//   console.log("connected as id " + connection.threadId);
   promptUser();
 });
 
 function promptUser() {
-    console.log('Welcome to Bamazon Supervisor.')
+    console.log('');
+    console.log('Welcome to Bamazon Supervisor!')
+    console.log('');
     inquirer.prompt([
         {
             type: 'rawlist',
             name: 'choose',
-            message: 'Please select an option below:',
+            message: 'Please select an option below: (Type the number and press enter)',
             choices: ['View Product Sales by Department', 'Create New Department', 'Exit']
         }
     ]).then(function(answer) {
@@ -44,15 +40,20 @@ function promptUser() {
 }
 
 function productSales() {
-    // var query = 'SELECT departments.department_id, departments.department_name, departments.over_head_costs, products.product_sales FROM departments INNER JOIN products ON departments.department_name = products.department_name;';
     var query = 'SELECT departments.department_id, departments.department_name, departments.over_head_costs, SUM(product_sales) AS product_sales FROM departments, products WHERE departments.department_name = products.department_name GROUP BY departments.department_id, departments.department_name, departments.over_head_costs ORDER BY departments.department_id;'
     connection.query(query, function(err, res) {
         if (err) throw err;
-        // console.log(res);
-        console.log('ID | Dept Name | Overhead Costs | Product Sales | Total Profit');
+        var table = new Table({   
+            head: ['ID', 'Department', 'Overhead Costs', 'Product Sales', 'Total Profit'],
+            colWidths: [5, 25, 20, 20, 20]
+        });
         for (var i = 0; i < res.length; i++) {
-            console.log(res[i].department_id + ' | ' + res[i].department_name + ' | ' + res[i].over_head_costs + ' | ' + '$' + res[i].product_sales + ' | ' + (res[i].product_sales - res[i].over_head_costs));
+            // table.push(  
+            //     [(JSON.parse(JSON.stringify(res))[i]["department_id"]), (JSON.parse(JSON.stringify(res))[i]["department_name"]), ("$ "+JSON.parse(JSON.stringify(res))[i]["over_head_costs"]), ("$ "+JSON.parse(JSON.stringify(res))[i]["product_sales"]), ("$ "+parseFloat(res[i].product_sales - res[i].over_head_costs))]);
+            table.push([res[i].department_id, res[i].department_name, '$ ' + res[i].over_head_costs, '$ ' + res[i].product_sales, '$ ' + (res[i].product_sales - res[i].over_head_costs)]); 
         }
+        console.log("\n" + table.toString()); 
+        console.log("");
         endConnection();
     })  
 }
@@ -78,7 +79,9 @@ function createDept() {
             }
         ], function(err, res) {
             if (err) throw err;
+            console.log('');
             console.log('You created a new ' + answer.name + ' department with $' + answer.cost + ' overhead!')
+            console.log('');
             endConnection();
         })
     })
@@ -92,7 +95,6 @@ function endConnection() {
             message: 'Would you like to return to the main menu?'
         }
     ]).then(function(answer) {
-        // console.log(answer.confirm);
         if (answer.confirm) {
             promptUser();
         }

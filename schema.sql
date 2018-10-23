@@ -14,7 +14,7 @@ CREATE TABLE products(
 );
 
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ('Playstation 4', 'Electronics', 400, 5);
+VALUES ('Playstation 4', 'Electronics', 400, 250);
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ('Raincoat', 'Clothing', 125, 250);
 INSERT INTO products (product_name, department_name, price, stock_quantity)
@@ -40,6 +40,19 @@ CREATE TABLE departments(
     over_head_costs DECIMAL(11,2),
     PRIMARY KEY (department_id)
 );
+
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ('Electronics', 500);
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ('Clothing', 600);
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ('Sporting Goods', 400);
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ('Food', 300);
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ('Auto', 900);
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ('Firearms', 700);
 
 ALTER TABLE products
 ADD product_sales DECIMAL(11,2);
@@ -71,7 +84,6 @@ FROM departments, products
 WHERE departments.department_name = products.department_name
 GROUP BY departments.department_id, departments.department_name, departments.over_head_costs
 ORDER BY departments.department_id;
-
 SELECT * FROM products;
 
 SELECT * FROM departments;

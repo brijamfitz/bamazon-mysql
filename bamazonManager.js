@@ -1,33 +1,29 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var Table = require("cli-table");
 
 var connection = mysql.createConnection({
   host: "localhost",
-
-  // Your port; if not 3306
   port: 3306,
-
-  // Your username
   user: "root",
-
-  // Your password
   password: "",
   database: "bamazon"
 });
 
 connection.connect(function(err) {
   if (err) throw err;
-//   console.log("connected as id " + connection.threadId);
   promptUser();
 });
 
 function promptUser() {
-    console.log('Welcome to Bamazon!');
+    console.log('');
+    console.log('Welcome to Bamazon Manager!');
+    console.log('');
     inquirer.prompt([
         {
             type: 'rawlist',
             name: 'choose',
-            message: 'What would you like to do?',
+            message: 'What would you like to do? (Type the number and press enter)',
             choices: ['View Products for Sale', 'View Low Inventory', 'Add to Inventory', 'Add New Product', 'Exit']
         }
     ]).then(function(userChoice) {
@@ -53,26 +49,36 @@ function viewProducts() {
     var query = 'SELECT * FROM products';
     connection.query(query, function(err, res) {
         if (err) throw err;
-        // console.log(res);
-        console.log('ID | Product Name | Dept Name | Price | Quantity');
+        var table = new Table({   
+            head: ['ID', 'Product', 'Department', 'Price', 'Quantity'],
+            colWidths: [5, 25, 20, 20, 20]
+        });
         for (var i = 0; i < res.length; i++) {
-            console.log(res[i].item_id + ' | ' + res[i].product_name + ' | ' + res[i].department_name + ' | ' + '$' + res[i].price + ' | ' + res[i].stock_quantity);
+            table.push([res[i].item_id, res[i].product_name, res[i].department_name, '$ ' + res[i].price, res[i].stock_quantity]);                          
         }
+        console.log("\n" + table.toString()); 
+        console.log("");
         endConnection();
     })  
 }
 
 function lowInventory() {
     var query = 'SELECT * FROM products';
-    console.log('Below are the products that have an inventory of 50 or less.')
+    console.log('');
+    console.log('Below are the products that have an inventory of 50 units or less.')
     connection.query(query, function(err, res) {
         if (err) throw err;
-        console.log('ID | Product Name | Dept Name | Price | Quantity');
-        for (var j = 0; j < res.length; j++) {
-            if (res[j].stock_quantity <= 50) {
-                console.log(res[j].item_id + ' | ' + res[j].product_name + ' | ' + res[j].department_name + ' | ' + '$' + res[j].price + ' | ' + res[j].stock_quantity);
+        var table = new Table({   
+            head: ['ID', 'Product', 'Department', 'Price', 'Quantity'],
+            colWidths: [5, 25, 20, 20, 20]
+        });
+        for (var i = 0; i < res.length; i++) {
+            if (res[i].stock_quantity <= 50) {
+                table.push([res[i].item_id, res[i].product_name, res[i].department_name, '$ ' + res[i].price, res[i].stock_quantity]); 
             }
         }
+        console.log("\n" + table.toString()); 
+        console.log("");
         endConnection();
     })
 }
@@ -81,46 +87,53 @@ function addInventory() {
     var query = 'SELECT * FROM products';
     connection.query(query, function(err, res) {
         if (err) throw err;
-        // console.log(res);
-        console.log('ID | Product Name | Dept Name | Price | Quantity');
+        var table = new Table({   
+            head: ['ID', 'Product', 'Department', 'Price', 'Quantity'],
+            colWidths: [5, 25, 20, 20, 20]
+        });
         for (var i = 0; i < res.length; i++) {
-            console.log(res[i].item_id + ' | ' + res[i].product_name + ' | ' + res[i].department_name + ' | ' + '$' + res[i].price + ' | ' + res[i].stock_quantity);
+            // table.push(  
+            //     [(JSON.parse(JSON.stringify(res))[i]["item_id"]), (JSON.parse(JSON.stringify(res))[i]["product_name"]), (JSON.parse(JSON.stringify(res))[i]["department_name"]), ("$ "+JSON.parse(JSON.stringify(res))[i]["price"].toFixed(2)), (JSON.parse(JSON.stringify(res))[i]["stock_quantity"])]);
+            table.push([res[i].item_id, res[i].product_name, res[i].department_name, '$ ' + res[i].price, res[i].stock_quantity]);                          
         }
-    })  
-    inquirer.prompt([
-        {
-            name: 'id',
-            message: 'Choose the ID of the product you would like to add inventory to.\n',
-            type: 'input'
-        },
-        {
-            name: 'quantity',
-            message: 'How many units would you like to add?',
-            type: 'input'
-        }
-    ]).then(function(answer) {
-        var uniqueId = parseInt(answer.id);
-        var uniqueQuantity = parseInt(answer.quantity);
-        // console.log(uniqueId);
-        // console.log(uniqueQuantity);
-        var query = 'SELECT * FROM products WHERE item_id = ?';
-        connection.query(query, [uniqueId], function(err, res) {
-            if (err) throw err;
-            connection.query('UPDATE products SET ? WHERE ?', [
-                {
-                    stock_quantity: res[0].stock_quantity + uniqueQuantity
-                },
-                {
-                    item_id: uniqueId
-                }
-            ], function(error, results) {
-                if (error) throw error;
-                console.log('You added ' + uniqueQuantity + ' units to the inventory!');
-                console.log('The new inventory is now: ' + (uniqueQuantity + res[0].stock_quantity + '.'));
-                endConnection();
-            });
+        console.log("\n" + table.toString()); 
+        console.log("");
+        inquirer.prompt([
+            {
+                name: 'id',
+                message: 'Choose the ID of the product you would like to add inventory to.\n',
+                type: 'input'
+            },
+            {
+                name: 'quantity',
+                message: 'How many units would you like to add?',
+                type: 'input'
+            }
+        ]).then(function(answer) {
+            var uniqueId = parseInt(answer.id);
+            var uniqueQuantity = parseInt(answer.quantity);
+            var query = 'SELECT * FROM products WHERE item_id = ?';
+            connection.query(query, [uniqueId], function(err, res) {
+                if (err) throw err;
+                connection.query('UPDATE products SET ? WHERE ?', [
+                    {
+                        stock_quantity: res[0].stock_quantity + uniqueQuantity
+                    },
+                    {
+                        item_id: uniqueId
+                    }
+                ], function(error, results) {
+                    if (error) throw error;
+                    console.log('');
+                    console.log('You added ' + uniqueQuantity + ' units to the inventory!');
+                    console.log('');
+                    console.log('The new inventory is now: ' + (uniqueQuantity + res[0].stock_quantity + '.'));
+                    console.log('');
+                    endConnection();
+                });
+            })
         })
-    })
+    })     
 }
 
 function addProduct() {
@@ -157,7 +170,9 @@ function addProduct() {
         ],
         function(err, res) {
             if (err) throw err;
+            console.log('');
             console.log('Thank you! You have added ' + answer.name + ' to the inventory!');
+            console.log('');
             endConnection();
         })
     })
@@ -171,7 +186,6 @@ function endConnection() {
             message: 'Would you like to return to the main menu?'
         }
     ]).then(function(answer) {
-        // console.log(answer.confirm);
         if (answer.confirm) {
             promptUser();
         }
