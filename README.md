@@ -1,12 +1,12 @@
 # Bamazon
 
-Bamazon is a mySQL and Node.js application that functions as an online marketplace.
+Bamazon is a MySQL and Node.js application that functions as an online marketplace.
 
 Please watch the video walkthrough. It contains narration, so please have the sound turned on as well.
 * [Bamazon Demo Video](https://drive.google.com/open?id=1iE_TABwLfDTecmOcuULW2LTd8QoRTjEc)
 
 Tech used:
-* mySQL
+* MySQL
 * Node.js
 * NPM packages: inquirer, mysql, cli-table
 
@@ -42,8 +42,8 @@ Files:
 How to Get Started:
 * Clone repository
 * From terminal command line, run `npm install` to install all depedencies
-* Connect to a mySQL database
-* Execute the `schema.sql` file in mySQL Workbench
+* Connect to a MySQL database
+* Execute the `schema.sql` file in MySQL Workbench
 * From terminal, run the following commands to experience Bamazon
     * Customer: `node bamazonCustomer.js`
     * Manager: `node bamazonManager.js`
