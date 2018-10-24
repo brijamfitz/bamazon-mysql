@@ -33,9 +33,7 @@ function displayProducts() {
             head: ['ID', 'Product', 'Department', 'Price', 'Quantity'],
             colWidths: [5, 25, 20, 20, 20]
         });
-        for (var i = 0; i < res.length; i++) {
-            // table.push(  
-            //     [(JSON.parse(JSON.stringify(res))[i]["item_id"]), (JSON.parse(JSON.stringify(res))[i]["product_name"]), (JSON.parse(JSON.stringify(res))[i]["department_name"]), ("$ "+JSON.parse(JSON.stringify(res))[i]["price"].toFixed(2)), (JSON.parse(JSON.stringify(res))[i]["stock_quantity"])]);         
+        for (var i = 0; i < res.length; i++) {        
             table.push([res[i].item_id, res[i].product_name, res[i].department_name, '$ ' + res[i].price, res[i].stock_quantity]);      
             itemIds.push(res[i].item_id);
             itemQuantity.push(res[i].stock_quantity);           
@@ -55,10 +53,18 @@ function selectProduct() {
         }
     ]).then(function(answer) {
         uniqueId = parseInt(answer.id);
-        for (var j = 0; j < itemIds.length; j++) {
-            if (uniqueId === itemIds[j]) {
-                numProducts();
+        if (!isNaN(uniqueId)) {
+            for (var j = 0; j < itemIds.length; j++) {
+                if (uniqueId === itemIds[j]) {
+                    numProducts();
+                }
             }
+        }
+        else {
+            console.log('');
+            console.log('Please enter a valid ID number.');
+            console.log('');
+            selectProduct();
         }
     })
 }
@@ -98,6 +104,12 @@ function numProducts() {
                         endConnection();
                     }
                 )
+            }
+            else {
+                console.log('');
+                console.log('The amount you chose is currently out of stock. Please choose a different amount.');
+                console.log('');
+                numProducts();
             }
         })   
     })

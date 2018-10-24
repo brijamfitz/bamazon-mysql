@@ -48,8 +48,6 @@ function productSales() {
             colWidths: [5, 25, 20, 20, 20]
         });
         for (var i = 0; i < res.length; i++) {
-            // table.push(  
-            //     [(JSON.parse(JSON.stringify(res))[i]["department_id"]), (JSON.parse(JSON.stringify(res))[i]["department_name"]), ("$ "+JSON.parse(JSON.stringify(res))[i]["over_head_costs"]), ("$ "+JSON.parse(JSON.stringify(res))[i]["product_sales"]), ("$ "+parseFloat(res[i].product_sales - res[i].over_head_costs))]);
             table.push([res[i].department_id, res[i].department_name, '$ ' + res[i].over_head_costs, '$ ' + res[i].product_sales, '$ ' + (res[i].product_sales - res[i].over_head_costs)]); 
         }
         console.log("\n" + table.toString()); 
@@ -72,18 +70,26 @@ function createDept() {
         }
     ]).then(function(answer) {
         var query = 'INSERT INTO departments SET ?';
-        connection.query(query, [
-            {
-                department_name: answer.name,
-                over_head_costs: answer.cost
-            }
-        ], function(err, res) {
-            if (err) throw err;
+        if (!isNaN(answer.cost)) {
+            connection.query(query, [
+                {
+                    department_name: answer.name,
+                    over_head_costs: answer.cost
+                }
+            ], function(err, res) {
+                if (err) throw err;
+                console.log('');
+                console.log('You created a new ' + answer.name + ' department with $' + answer.cost + ' overhead!')
+                console.log('');
+                endConnection();
+            })
+        }
+        else {
             console.log('');
-            console.log('You created a new ' + answer.name + ' department with $' + answer.cost + ' overhead!')
+            console.log('Please enter a valid overhead costs figure.');
             console.log('');
-            endConnection();
-        })
+            createDept();
+        }
     })
 }
 

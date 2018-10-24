@@ -92,8 +92,6 @@ function addInventory() {
             colWidths: [5, 25, 20, 20, 20]
         });
         for (var i = 0; i < res.length; i++) {
-            // table.push(  
-            //     [(JSON.parse(JSON.stringify(res))[i]["item_id"]), (JSON.parse(JSON.stringify(res))[i]["product_name"]), (JSON.parse(JSON.stringify(res))[i]["department_name"]), ("$ "+JSON.parse(JSON.stringify(res))[i]["price"].toFixed(2)), (JSON.parse(JSON.stringify(res))[i]["stock_quantity"])]);
             table.push([res[i].item_id, res[i].product_name, res[i].department_name, '$ ' + res[i].price, res[i].stock_quantity]);                          
         }
         console.log("\n" + table.toString()); 
@@ -112,26 +110,33 @@ function addInventory() {
         ]).then(function(answer) {
             var uniqueId = parseInt(answer.id);
             var uniqueQuantity = parseInt(answer.quantity);
-            var query = 'SELECT * FROM products WHERE item_id = ?';
-            connection.query(query, [uniqueId], function(err, res) {
-                if (err) throw err;
-                connection.query('UPDATE products SET ? WHERE ?', [
-                    {
-                        stock_quantity: res[0].stock_quantity + uniqueQuantity
-                    },
-                    {
-                        item_id: uniqueId
-                    }
-                ], function(error, results) {
-                    if (error) throw error;
-                    console.log('');
-                    console.log('You added ' + uniqueQuantity + ' units to the inventory!');
-                    console.log('');
-                    console.log('The new inventory is now: ' + (uniqueQuantity + res[0].stock_quantity + '.'));
-                    console.log('');
-                    endConnection();
-                });
-            })
+            if (!isNaN(uniqueId) && !isNaN(uniqueQuantity)) {
+                var query = 'SELECT * FROM products WHERE item_id = ?';
+                connection.query(query, [uniqueId], function(err, res) {
+                    if (err) throw err;
+                    connection.query('UPDATE products SET ? WHERE ?', [
+                        {
+                            stock_quantity: res[0].stock_quantity + uniqueQuantity
+                        },
+                        {
+                            item_id: uniqueId
+                        }
+                    ], function(error, results) {
+                        if (error) throw error;
+                        console.log('');
+                        console.log('You added ' + uniqueQuantity + ' units to the inventory!');
+                        console.log('');
+                        console.log('The new inventory is now: ' + (uniqueQuantity + res[0].stock_quantity + '.'));
+                        console.log('');
+                        endConnection();
+                    });
+                })
+            }
+            else {
+                console.log('');
+                console.log('Please enter a valid ID and valid number of units.');
+                addInventory();
+            }
         })
     })     
 }
@@ -160,21 +165,29 @@ function addProduct() {
         }
     ]).then(function(answer) {
         var query = 'INSERT INTO products SET ?';
-        connection.query(query, [
-            {
-                product_name: answer.name,
-                department_name: answer.department,
-                price: answer.price,
-                stock_quantity: answer.quantity
-            }
-        ],
-        function(err, res) {
-            if (err) throw err;
+        if (!isNaN(answer.price) && !isNaN(answer.quantity)) {
+            connection.query(query, [
+                {
+                    product_name: answer.name,
+                    department_name: answer.department,
+                    price: answer.price,
+                    stock_quantity: answer.quantity
+                }
+            ],
+            function(err, res) {
+                if (err) throw err;
+                console.log('');
+                console.log('Thank you! You have added ' + answer.name + ' to the inventory!');
+                console.log('');
+                endConnection();
+            })
+        }
+        else {
             console.log('');
-            console.log('Thank you! You have added ' + answer.name + ' to the inventory!');
+            console.log('Please enter a valid price and valid number of units.');
             console.log('');
-            endConnection();
-        })
+            addProduct();
+        }
     })
 }
 
