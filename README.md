@@ -12,20 +12,20 @@ Tech used:
 
 The app has three core functions:
 
-###Customer:
+### Customer:
 * User can select and purchase products from the marketplace
 * Provides a total sale after a purchase is made
 * Updates database after each successful purchase
 * Allows the user to continue shopping or exist
 
-###Manager:
+### Manager:
 * User can view all available products in the marketplace
 * User can view products with an inventory of 50 or less
 * User can add inventory to a specific product
 * User can add a brand new item and all its values
 * Updates database after each successful action
 
-###Supervisor
+### Supervisor
 * User can view product sales data by department. This includes:
     * Overhead Costs
     * Total Sales
