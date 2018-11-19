@@ -5,27 +5,27 @@ Bamazon is a MySQL and Node.js application that functions as an online marketpla
 Please watch the video walkthrough. It contains narration, so please have the sound turned on as well.
 * [Bamazon Demo Video](https://drive.google.com/open?id=1iE_TABwLfDTecmOcuULW2LTd8QoRTjEc)
 
-Tech used:
+**Tech used:**
 * MySQL
 * Node.js
 * NPM packages: inquirer, mysql, cli-table
 
 The app has three core functions:
 
-### Customer:
+**Customer:**
 * User can select and purchase products from the marketplace
 * Provides a total sale after a purchase is made
 * Updates database after each successful purchase
 * Allows the user to continue shopping or exit
 
-### Manager:
+**Manager:**
 * User can view all available products in the marketplace
 * User can view products with an inventory of 50 or less
 * User can add inventory to a specific product
 * User can add a brand new item and all its values
 * Updates database after each successful action
 
-### Supervisor
+**Supervisor:**
 * User can view product sales data by department. This includes:
     * Overhead Costs
     * Total Sales
@@ -48,3 +48,11 @@ How to Get Started:
     * Customer: `node bamazonCustomer.js`
     * Manager: `node bamazonManager.js`
     * Supervisor: `node bamazonSupervisor.js`
+
+&nbsp;
+
+Designed, built, and maintained by Brian Fitzgerald
+
+Email: brianjfitzgerald@gmail.com
+
+&#169; 2018
