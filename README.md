@@ -5,6 +5,8 @@ Bamazon is a MySQL and Node.js application that functions as an online marketpla
 Please watch the video walkthrough. It contains narration, so please have the sound turned on as well.
 * [Bamazon Demo Video](https://drive.google.com/open?id=1iE_TABwLfDTecmOcuULW2LTd8QoRTjEc)
 
+![image](assets/images/screenshot-bamazon.png)
+
 **Tech used:**
 * MySQL
 * Node.js
@@ -55,4 +57,4 @@ Designed, built, and maintained by Brian Fitzgerald
 
 Email: brianjfitzgerald@gmail.com
 
-&#169; 2018
+Copyright &#169; 2018
